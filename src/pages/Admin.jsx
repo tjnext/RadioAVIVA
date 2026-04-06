@@ -176,7 +176,7 @@ export default function Admin() {
         </button>
 
         <div style={{ marginBottom: '70px' }}>
-          <img src="/assets/RavivaSF.png" alt="Rádio AVIVA" style={{ height: '110px' }} />
+          <img src="public/assets/RavivaSF.png" alt="Rádio AVIVA" style={{ height: '110px' }} />
         </div>
 
         <form onSubmit={handleLogin} style={{ width: '100%', maxWidth: '350px', display: 'flex', flexDirection: 'column', gap: '35px' }}>
@@ -226,9 +226,8 @@ export default function Admin() {
           <button 
             type="submit" 
             style={{
-              background: '#235F7E',
+              background: '#134B62',
               color: '#fff',
-              border: 'none',
               borderRadius: '5px',
               padding: '16px',
               fontSize: '1rem',
@@ -250,7 +249,7 @@ export default function Admin() {
 
   // Admin Dashboard
   return (
-    <div className="admin-body" style={{ backgroundColor: '#001a38', minHeight: '100vh', marginTop: '-80px', paddingTop: '40px' }}>
+    <div className="admin-body" style={{ backgroundColor: '#134B62', minHeight: '100vh', marginTop: '-80px', paddingTop: '40px' }}>
       <div className="admin-container">
         <div className="admin-header">
           <div className="admin-title">
