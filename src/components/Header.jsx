@@ -7,7 +7,7 @@ export default function Header() {
       <div className="container header-flex" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div className="logo-container">
           <a href="#" className="logo-link">
-            <img src="/assets/RavivaSF.png" alt="Rádio AVIVA" className="logo" />
+            <img src="public/assets/RavivaSF.png" alt="Rádio AVIVA" className="logo" />
           </a>
         </div>
         
