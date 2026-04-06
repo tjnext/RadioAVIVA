@@ -19,7 +19,7 @@ export default function Eventos() {
             <div className="evento-premium-card" key={evento.id}>
               <div className="evento-image-wrapper">
                 <img 
-                  src={evento.image || '/assets/fundobiblia.jpg'} 
+                  src={evento.image || 'public/assets/fundobiblia.jpg'} 
                   alt={evento.title} 
                   className="evento-img"
                 />
