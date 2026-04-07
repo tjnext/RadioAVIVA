@@ -1,50 +1,57 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import { useData } from '../hooks/useData';
 
 export default function Programacao() {
   const { programs } = useData();
-  const scrollRef = useRef(null);
-
-  const scroll = (direction) => {
-    if (scrollRef.current) {
-      const { scrollLeft, clientWidth } = scrollRef.current;
-      const scrollTo = direction === 'left' 
-        ? scrollLeft - clientWidth 
-        : scrollLeft + clientWidth;
-      
-      scrollRef.current.scrollTo({
-        left: scrollTo,
-        behavior: 'smooth'
-      });
-    }
-  };
 
   return (
     <section className="programacao-section" id="programacao">
       <div className="container">
         <div className="section-header">
           <h2>Nossa Programação</h2>
-          <p>Acompanhe nossos programas diários feitos para edificar a sua fé</p>
+          <p>Acompanhe nossa rádio 24h e leve a Rádio AVIVA para onde você for!</p>
         </div>
         
-        <div className="carousel-container">
-          <button className="carousel-arrow arrow-left" onClick={() => scroll('left')} aria-label="Anterior">
-            <i className="fas fa-chevron-left"></i>
-          </button>
-          
-          <div className="schedule-grid" ref={scrollRef}>
-            {programs.map((program) => (
-              <div className="schedule-card" key={program.id}>
-                <div className="time">{program.time}</div>
-                <h3>{program.title}</h3>
-                <p>{program.description}</p>
-              </div>
-            ))}
+        <div className="programacao-tri-wrapper">
+          {/* Coluna 1: Programação */}
+          <div className="tri-column tri-left">
+            <h3 className="tri-title"><i className="fas fa-clock"></i> Horários</h3>
+            <div className="programacao-vertical-list">
+              {programs.map((program) => (
+                <div className="schedule-card-v" key={program.id}>
+                  <div className="time">{program.time}</div>
+                  <div className="schedule-info">
+                    <h3>{program.title}</h3>
+                    <p>{program.description}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
 
-          <button className="carousel-arrow arrow-right" onClick={() => scroll('right')} aria-label="Próximo">
-            <i className="fas fa-chevron-right"></i>
-          </button>
+          {/* Coluna 2: Imagem Central (Estúdio) */}
+          <div className="tri-column tri-center">
+            <div className="studio-img-wrapper-tri">
+              <img src="./assets/studio.png" alt="Estúdio Rádio AVIVA" className="studio-img-tri" />
+            </div>
+          </div>
+
+          {/* Coluna 3: App Download */}
+          <div className="tri-column tri-right">
+            <div className="download-app-card-tri">
+              <h3>Baixe o App Oficial</h3>
+              <a href="#" className="btn-download-green-tri" target="_blank" rel="noopener noreferrer">
+                <i className="fas fa-download"></i> BAIXAR
+              </a>
+              <div className="mockup-container-tri">
+                <img 
+                  src="./assets/smartphones.png" 
+                  alt="App Rádio AVIVA Mockup" 
+                  className="app-mockup-img-tri" 
+                />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>

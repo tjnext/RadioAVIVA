@@ -1,7 +1,7 @@
 import React from 'react';
 
 export default function PedidoOracao() {
-  const whatsappNumber = "55999999999"; // O usuário pode trocar depois
+  const whatsappNumber = "555581380911"; // O usuário pode trocar depois
   const message = encodeURIComponent("Olá! Gostaria de fazer um pedido de oração.");
 
   return (

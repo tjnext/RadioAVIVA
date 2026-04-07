@@ -2,14 +2,25 @@ import React, { useEffect } from 'react';
 
 export default function Player() {
   useEffect(() => {
-    // Only append the script if it doesn't already exist
-    if (!document.getElementById('caster-embed-script')) {
-      const script = document.createElement('script');
-      script.id = 'caster-embed-script';
-      script.src = "//cdn.cloud.caster.fm/widgets/embed.js";
-      script.async = true;
-      document.body.appendChild(script);
+    // In SPAs and dev environments, we need to ensure the script parses the new DOM element.
+    const scriptId = 'caster-embed-script';
+    let existingScript = document.getElementById(scriptId);
+    
+    if (existingScript) {
+      existingScript.remove();
     }
+    
+    const script = document.createElement('script');
+    script.id = scriptId;
+    script.src = "https://cdn.cloud.caster.fm/widgets/embed.js?v=" + new Date().getTime();
+    script.async = true;
+    document.body.appendChild(script);
+
+    return () => {
+      if (document.getElementById(scriptId)) {
+        document.getElementById(scriptId).remove();
+      }
+    };
   }, []);
 
   return (

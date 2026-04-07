@@ -7,9 +7,9 @@ export default function Footer() {
         
         {/* Left Column: Logo & Desc */}
         <div style={{ flex: '1 1 300px', textAlign: 'center', marginBottom: '30px' }}>
-          <img src="/assets/RavivaSF.png" alt="Rádio AVIVA" style={{ height: '70px', marginBottom: '20px' }} />
+          <img src="./assets/RavivaSF.png" alt="Rádio AVIVA" style={{ height: '70px', marginBottom: '20px' }} />
           <p style={{ fontSize: '1.05rem', lineHeight: '1.6', maxWidth: '400px', margin: '0 auto', color: '#e9ecef' }}>
-            Rádio AVIVA conecta você com a fé, adoração e comunidade cristã todos os dias.
+            Rádio AVIVA conecta você e Deus com adoração e fé todos os dias.
           </p>
         </div>
 
@@ -17,8 +17,8 @@ export default function Footer() {
         <div style={{ flex: '1 1 300px', textAlign: 'center', marginBottom: '30px' }}>
           <h3 style={{ color: '#FFD700', fontSize: '1.3rem', marginBottom: '20px', fontWeight: 'bold' }}>Contato</h3>
           <ul style={{ listStyle: 'none', padding: 0, margin: 0, color: '#e9ecef', fontSize: '1.05rem', lineHeight: '2' }}>
-            <li><i className="fas fa-phone-alt" style={{ marginRight: '10px' }}></i>(55) 9999-9999</li>
-            <li><i className="fas fa-envelope" style={{ marginRight: '10px' }}></i>contato@radioaviva.com</li>
+            <li><i className="fas fa-phone-alt" style={{ marginRight: '10px' }}></i>(54) 99678-0822</li>
+            <li><i className="fas fa-envelope" style={{ marginRight: '10px' }}></i>ad.radioaviva@gmail.com</li>
             <li><i className="fas fa-map-marker-alt" style={{ marginRight: '10px' }}></i>Barra Funda, RS</li>
           </ul>
         </div>

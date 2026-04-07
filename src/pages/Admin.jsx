@@ -4,8 +4,19 @@ import { useData } from '../hooks/useData';
 
 export default function Admin() {
   const [isLoggedIn, setIsLoggedIn] = useState(
-    sessionStorage.getItem('adminLoggedIn') === 'true'
+    sessionStorage.getItem('adminLoggedIn') === 'true' || localStorage.getItem('adminLoggedIn') === 'true'
   );
+  const [rememberMe, setRememberMe] = useState(false);
+
+  const [adminProfile, setAdminProfile] = useState(() => {
+    const saved = localStorage.getItem('adminProfile');
+    return saved ? JSON.parse(saved) : { username: 'admin', password: '123456', name: 'Administrador', avatar: './assets/RavivaSF.png' };
+  });
+  const [draftProfile, setDraftProfile] = useState(() => {
+    const saved = localStorage.getItem('adminProfile');
+    return saved ? JSON.parse(saved) : { username: 'admin', password: '123456', name: 'Administrador', avatar: './assets/RavivaSF.png' };
+  });
+
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
@@ -22,10 +33,14 @@ export default function Admin() {
 
   const handleImageFile = (e) => {
     const file = e.target.files[0];
-    if (!file) return;
+    if (!file) {
+      e.target.value = null;
+      return;
+    }
 
     if (file.size > 5 * 1024 * 1024) {
       alert('Arquivo muito grande! Escolha uma imagem com menos de 5MB.');
+      e.target.value = null;
       return;
     }
 
@@ -63,16 +78,18 @@ export default function Admin() {
       img.src = event.target.result;
     };
     reader.readAsDataURL(file);
+    e.target.value = null; // Clears the input so the same or another file can be re-selected easily
   };
-  const [editItem, setEditItem] = useState({ id: null, time: '', title: '', description: '', image: '' });
-
-  const DEFAULT_USERNAME = 'admin';
-  const DEFAULT_PASSWORD = '123456';
+  const [editItem, setEditItem] = useState({ id: null, time: '', title: '', description: '', image: '', imageFit: 'cover' });
 
   const handleLogin = (e) => {
     e.preventDefault();
-    if (username === DEFAULT_USERNAME && password === DEFAULT_PASSWORD) {
-      sessionStorage.setItem('adminLoggedIn', 'true');
+    if (username === adminProfile.username && password === adminProfile.password) {
+      if (rememberMe) {
+        localStorage.setItem('adminLoggedIn', 'true');
+      } else {
+        sessionStorage.setItem('adminLoggedIn', 'true');
+      }
       setIsLoggedIn(true);
       setErrorMsg('');
     } else {
@@ -82,19 +99,20 @@ export default function Admin() {
 
   const handleLogout = () => {
     sessionStorage.removeItem('adminLoggedIn');
+    localStorage.removeItem('adminLoggedIn');
     setIsLoggedIn(false);
-    window.location.href = '/';
+    navigate('/'); // Use o navigate do React Router, ele respeita o basename!
   };
 
   const openModal = (type, item = null) => {
     setModalType(type);
     if (item) {
-      setEditItem({ id: item.id, time: item.time || item.date, title: item.title, description: item.description, image: item.image || '' });
+      setEditItem({ id: item.id, time: item.time || item.date, title: item.title, description: item.description, image: item.image || '', imageFit: item.imageFit || 'cover' });
     } else {
       const newId = type === 'program' 
         ? Math.max(...programs.map(p => p.id), 0) + 1
         : Math.max(...eventos.map(e => e.id), 0) + 1;
-      setEditItem({ id: newId, time: '', title: '', description: '', image: '' });
+      setEditItem({ id: newId, time: '', title: '', description: '', image: '', imageFit: 'cover' });
     }
     setModalOpen(true);
   };
@@ -112,7 +130,7 @@ export default function Admin() {
     } else {
       const newEventos = [...eventos];
       const index = newEventos.findIndex(ev => ev.id === editItem.id);
-      const updated = { id: editItem.id, date: editItem.time, title: editItem.title, description: editItem.description, image: editItem.image };
+      const updated = { id: editItem.id, date: editItem.time, title: editItem.title, description: editItem.description, image: editItem.image, imageFit: editItem.imageFit };
       if (index >= 0) newEventos[index] = updated;
       else newEventos.push(updated);
       newEventos.sort((a, b) => a.date.localeCompare(b.date));
@@ -176,7 +194,7 @@ export default function Admin() {
         </button>
 
         <div style={{ marginBottom: '70px' }}>
-          <img src="/assets/RavivaSF.png" alt="Rádio AVIVA" style={{ height: '110px' }} />
+          <img src="./assets/RavivaSF.png" alt="Rádio AVIVA" style={{ height: '110px' }} />
         </div>
 
         <form onSubmit={handleLogin} style={{ width: '100%', maxWidth: '350px', display: 'flex', flexDirection: 'column', gap: '35px' }}>
@@ -222,20 +240,29 @@ export default function Admin() {
               }}
             />
           </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#fff', fontSize: '0.95rem' }}>
+            <input 
+              type="checkbox" 
+              id="rememberMe"
+              checked={rememberMe}
+              onChange={(e) => setRememberMe(e.target.checked)}
+              style={{ cursor: 'pointer', accentColor: '#FFD700', width: '16px', height: '16px' }}
+            />
+            <label htmlFor="rememberMe" style={{ cursor: 'pointer' }}>Lembre-me</label>
+          </div>
           {errorMsg && <div style={{color:'#ff6b6b', textAlign: 'center', fontSize: '0.9rem'}}>{errorMsg}</div>}
           <button 
             type="submit" 
             style={{
-              background: '#235F7E',
+              background: '#134B62',
               color: '#fff',
-              border: 'none',
-              borderRadius: '5px',
+              borderRadius: '50px',
               padding: '16px',
               fontSize: '1rem',
               fontWeight: '600',
               letterSpacing: '1px',
               cursor: 'pointer',
-              marginTop: '15px',
+              marginTop: '5px',
               transition: 'background 0.3s'
             }}
             onMouseOver={e => e.currentTarget.style.background = '#2B749A'}
@@ -250,19 +277,32 @@ export default function Admin() {
 
   // Admin Dashboard
   return (
-    <div className="admin-body" style={{ backgroundColor: '#001a38', minHeight: '100vh', marginTop: '-80px', paddingTop: '40px' }}>
+    <div className="admin-body" style={{ backgroundColor: '#134B62', minHeight: '100vh', marginTop: '-80px', paddingTop: '40px' }}>
       <div className="admin-container">
-        <div className="admin-header">
-          <div className="admin-title">
-            <div className="logo-icon"><i className="fas fa-cogs"></i></div>
-            <div>
+        <div className="admin-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', width: '100%', marginBottom: '30px' }}>
+          <div className="admin-title-group">
+            <div className="admin-title">
+              <div className="logo-icon"><i className="fas fa-cogs"></i></div>
               <h1>Painel de Controle</h1>
-              <p>Gerencie o conteúdo do site</p>
             </div>
+            <button className="btn-logout" onClick={() => navigate('/')} style={{ backgroundColor: '#dc3545', marginTop: '10px', width: 'fit-content' }}>
+              <i className="fas fa-arrow-left"></i> Voltar
+            </button>
           </div>
-          <button className="btn-logout" onClick={handleLogout}>
-            <i className="fas fa-sign-out-alt"></i> Sair
-          </button>
+
+          <div style={{ display: 'flex', gap: '15px', alignItems: 'center', marginBottom: '3px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <div style={{ color: '#fff', fontSize: '1rem', fontWeight: '600' }}>{adminProfile.name}</div>
+              <img 
+                src={adminProfile.avatar} 
+                alt="Profile" 
+                style={{ width: '45px', height: '45px', borderRadius: '50%', objectFit: 'cover', border: '2px solid #FFD700' }} 
+              />
+            </div>
+            <button className="btn-logout" onClick={handleLogout} style={{ backgroundColor: '#dc3545' }}>
+              <i className="fas fa-sign-out-alt"></i> Sair
+            </button>
+          </div>
         </div>
 
         <div className="admin-content">
@@ -272,6 +312,9 @@ export default function Admin() {
             </button>
             <button className={`tab-btn ${activeTab === 'eventos' ? 'active' : ''}`} onClick={() => setActiveTab('eventos')}>
               <i className="fas fa-calendar-alt"></i> Eventos
+            </button>
+            <button className={`tab-btn ${activeTab === 'perfil' ? 'active' : ''}`} onClick={() => setActiveTab('perfil')}>
+              <i className="fas fa-user-circle"></i> Perfil
             </button>
           </div>
 
@@ -387,9 +430,9 @@ export default function Admin() {
                 <div className="items-list">
                   {eventos.map(ev => (
                     <div className="item-card" key={ev.id}>
-                      <div className="item-time">{ev.date}</div>
+                      <div className="item-time">{ev.date ? ev.date.split('-').reverse().join('/') : 'Data indefinida'}</div>
                       <div className="item-thumb" style={{ width: '80px', height: '60px', marginLeft: '15px', borderRadius: '5px', overflow: 'hidden' }}>
-                        <img src={ev.image || '/assets/fundobiblia.jpg'} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        <img src={ev.image || './assets/fundobiblia.jpg'} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                       </div>
                       <div className="item-content">
                         <h3>{ev.title}</h3>
@@ -401,6 +444,107 @@ export default function Admin() {
                     </div>
                   ))}
                 </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'perfil' && (
+            <div className="tab-content active">
+              <div className="tab-header">
+                <h2>Perfil do Administrador</h2>
+              </div>
+              <div style={{ backgroundColor: '#f8f9fa', padding: '30px', borderRadius: '15px', border: '1px solid #ddd', maxWidth: '600px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '30px' }}>
+                  <img src={draftProfile.avatar} alt="Avatar" style={{ width: '100px', height: '100px', borderRadius: '50%', objectFit: 'cover', border: '3px solid #134B62' }} />
+                  <div>
+                    <label style={{ display: 'block', marginBottom: '10px', fontWeight: '600', color: '#001a38' }}>Alterar Avatar</label>
+                    <input type="file" accept="image/*" onChange={(e) => {
+                      const file = e.target.files[0];
+                      if (!file) return;
+                      
+                      const reader = new FileReader();
+                      reader.onload = (ev) => {
+                        const img = new Image();
+                        img.onload = () => {
+                          const canvas = document.createElement('canvas');
+                          let width = img.width;
+                          let height = img.height;
+                          
+                          // Redimensionar para no máximo 400px (economizar espaço no localStorage)
+                          const MAX_SIZE = 400;
+                          if (width > height) {
+                            if (width > MAX_SIZE) {
+                              height *= MAX_SIZE / width;
+                              width = MAX_SIZE;
+                            }
+                          } else {
+                            if (height > MAX_SIZE) {
+                              width *= MAX_SIZE / height;
+                              height = MAX_SIZE;
+                            }
+                          }
+                          
+                          canvas.width = width;
+                          canvas.height = height;
+                          const ctx = canvas.getContext('2d');
+                          ctx.drawImage(img, 0, 0, width, height);
+                          const compressedBase64 = canvas.toDataURL('image/jpeg', 0.8);
+                          setDraftProfile(prev => ({ ...prev, avatar: compressedBase64 }));
+                        };
+                        img.src = ev.target.result;
+                      };
+                      reader.readAsDataURL(file);
+                      e.target.value = null;
+                    }} />
+                  </div>
+                </div>
+
+                <div className="form-group" style={{ marginBottom: '20px' }}>
+                  <label>Nome de Exibição</label>
+                  <input type="text" value={draftProfile.name} onChange={(e) => setDraftProfile({ ...draftProfile, name: e.target.value })} 
+                    style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #ccc', fontSize: '1rem' }} />
+                </div>
+                <div className="form-group" style={{ marginBottom: '20px' }}>
+                  <label>Usuário de Login</label>
+                  <input type="text" value={draftProfile.username} onChange={(e) => setDraftProfile({ ...draftProfile, username: e.target.value })} 
+                    style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #ccc', fontSize: '1rem' }} />
+                </div>
+                <div className="form-group" style={{ marginBottom: '20px' }}>
+                  <label>Senha de Login</label>
+                  <input type="password" value={draftProfile.password} onChange={(e) => setDraftProfile({ ...draftProfile, password: e.target.value })} 
+                    style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #ccc', fontSize: '1rem' }} />
+                </div>
+                
+                {(() => {
+                  const hasChanges = JSON.stringify(adminProfile) !== JSON.stringify(draftProfile);
+                  return (
+                    <div style={{ display: 'flex', gap: '15px', marginTop: '30px' }}>
+                      <button 
+                        disabled={!hasChanges}
+                        onClick={() => {
+                          const updated = { ...draftProfile };
+                          setAdminProfile(updated);
+                          localStorage.setItem('adminProfile', JSON.stringify(updated));
+                          window.dispatchEvent(new CustomEvent('profileUpdate'));
+                        }}
+                        style={{ flex: 1, padding: '12px', backgroundColor: '#134B62', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: hasChanges ? 'pointer' : 'not-allowed', transition: '0.3s', opacity: hasChanges ? 1 : 0.5 }}
+                        onMouseOver={e => hasChanges && (e.currentTarget.style.backgroundColor = '#2B749A')}
+                        onMouseOut={e => hasChanges && (e.currentTarget.style.backgroundColor = '#134B62')}
+                      >
+                        <i className="fas fa-save"></i> Salvar
+                      </button>
+                      <button 
+                        disabled={!hasChanges}
+                        onClick={() => setDraftProfile(adminProfile)}
+                        style={{ flex: 1, padding: '12px', backgroundColor: '#dc3545', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: hasChanges ? 'pointer' : 'not-allowed', transition: '0.3s', opacity: hasChanges ? 1 : 0.5 }}
+                        onMouseOver={e => hasChanges && (e.currentTarget.style.backgroundColor = '#e85d6b')}
+                        onMouseOut={e => hasChanges && (e.currentTarget.style.backgroundColor = '#dc3545')}
+                      >
+                        <i className="fas fa-times"></i> Descartar
+                      </button>
+                    </div>
+                  );
+                })()}
               </div>
             </div>
           )}
@@ -427,7 +571,9 @@ export default function Admin() {
             width: '90%',
             maxWidth: '500px',
             padding: '30px',
-            boxShadow: '0 10px 30px rgba(0,0,0,0.2)'
+            boxShadow: '0 10px 30px rgba(0,0,0,0.2)',
+            maxHeight: '90vh',
+            overflowY: 'auto'
           }}>
             <div style={{
               display: 'flex',
@@ -527,7 +673,7 @@ export default function Admin() {
                 <div style={{ marginBottom: '25px' }}>
                   {editItem.image && (
                     <div style={{ marginBottom: '15px', borderRadius: '8px', overflow: 'hidden', border: '1px solid #ddd', background: '#f5f5f5' }}>
-                       <img src={editItem.image} alt="Preview" style={{ width: '100%', height: '160px', objectFit: 'cover' }} />
+                       <img src={editItem.image} alt="Preview" style={{ width: '100%', height: '160px', objectFit: editItem.imageFit || 'cover' }} />
                     </div>
                   )}
 
@@ -540,7 +686,7 @@ export default function Admin() {
                       type="text" 
                       value={editItem.image} 
                       onChange={e => setEditItem({...editItem, image: e.target.value})} 
-                      placeholder="URL da imagem (ex: /assets/evento.jpg)"
+                      placeholder="URL da imagem (ex: ./assets/evento.jpg)"
                       style={{
                         flex: 1,
                         padding: '12px 15px',
@@ -552,6 +698,7 @@ export default function Admin() {
                       }}
                     />
                     <button 
+                      type="button"
                       onClick={() => fileInputRef.current.click()}
                       style={{
                         padding: '0 20px',
@@ -575,9 +722,31 @@ export default function Admin() {
                       style={{ display: 'none' }} 
                     />
                   </div>
-                  <p style={{ fontSize: '0.8rem', color: '#666' }}>
+                  <p style={{ fontSize: '0.8rem', color: '#666', marginBottom: '20px' }}>
                     Dica: Escolha um arquivo do seu dispositivo ou cole um link externo.
                   </p>
+
+                  <div style={{ marginBottom: '15px' }}>
+                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', color: '#001a38', fontSize: '0.95rem' }}>
+                      Enquadramento da Imagem
+                    </label>
+                    <select 
+                      value={editItem.imageFit || 'cover'}
+                      onChange={e => setEditItem({...editItem, imageFit: e.target.value})}
+                      style={{
+                        width: '100%',
+                        padding: '12px 15px',
+                        border: '1px solid #dee2e6',
+                        borderRadius: '8px',
+                        fontSize: '1rem',
+                        outline: 'none',
+                        fontFamily: "'Poppins', sans-serif"
+                      }}
+                    >
+                      <option value="cover">Preencher Espaço (Corta bordas)</option>
+                      <option value="contain">Ajustar Inteira (Mostra por completo)</option>
+                    </select>
+                  </div>
                 </div>
               )}
               <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '15px' }}>

@@ -16,7 +16,6 @@ export default function Hero() {
       if (navigator.share && navigator.canShare && navigator.canShare({ files: [imageFile] })) {
         await navigator.share({
           files: [imageFile],
-          title: 'Versículo do Dia - Rádio AVIVA',
           text: `"${verse.text}" - ${verse.reference}\n\nOUÇA A RÁDIO AVIVA: ${window.location.origin}`
         });
       } else {

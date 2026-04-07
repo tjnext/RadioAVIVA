@@ -11,9 +11,11 @@ export async function generateVerseImage(verse) {
   canvas.width = size;
   canvas.height = size;
 
+  const basePath = import.meta.env.BASE_URL || '/';
+
   // 1. Load the background image
   const bgImg = new Image();
-  bgImg.src = '/assets/fundobiblia.jpg'; // Using the established background
+  bgImg.src = `${basePath}assets/fundobiblia.jpg`; // Using the established background
   await new Promise((resolve) => {
     bgImg.onload = resolve;
     bgImg.onerror = () => {
@@ -24,7 +26,7 @@ export async function generateVerseImage(verse) {
 
   // 2. Load the Logo
   const logoImg = new Image();
-  logoImg.src = '/assets/RavivaSF.png';
+  logoImg.src = `${basePath}assets/RavivaSF.png`;
   await new Promise((resolve) => {
     logoImg.onload = resolve;
     logoImg.onerror = resolve;
@@ -52,11 +54,11 @@ export async function generateVerseImage(verse) {
   ctx.textAlign = 'center';
   ctx.fillStyle = 'white';
   
-  // -- Verse Text (Poppins Bold Italic for premium look)
+  // -- Verse Text (Georgia Bold Italic for a more classic, premium look)
   const margin = 80;
   const maxWidth = size - (margin * 2);
   let fontSize = 70;
-  ctx.font = `bold italic ${fontSize}px Poppins`;
+  ctx.font = `bold italic ${fontSize}px "Georgia", serif`;
   
   // Wrap Text Function
   const lines = wrapText(ctx, `"${verse.text}"`, maxWidth);

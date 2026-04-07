@@ -9,7 +9,7 @@ export default function Cultos() {
       <div className="container">
         <div className="section-header">
           <h2>Nossos Cultos</h2>
-          <p>Junte-se a nós em nossas celebrações semanais</p>
+          <p>Vamos juntos Adorar a DEUS</p>
         </div>
 
         <div className="events-grid">

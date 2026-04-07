@@ -6,7 +6,7 @@ export default function RedesSociais() {
       <div className="container">
         <div className="section-header">
           <h2 style={{ color: '#FFD700' }}>Siga-nos nas Redes</h2>
-          <p>Acompanhe Rádio AVIVA em todas as redes sociais</p>
+          <p>Siga a Igreja Assembleia de Deus da Barra funda nas redes sociais</p>
         </div>
         <div className="social-links">
           <a href="https://www.facebook.com/ieadebaf" className="social-btn facebook" target="_blank" rel="noopener noreferrer">

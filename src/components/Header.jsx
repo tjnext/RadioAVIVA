@@ -1,13 +1,47 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 export default function Header() {
+  const [userName, setUserName] = useState('');
+  const [userAvatar, setUserAvatar] = useState(null);
+
+  useEffect(() => {
+    const checkLogin = () => {
+      const isLoggedIn = sessionStorage.getItem('adminLoggedIn') === 'true' || localStorage.getItem('adminLoggedIn') === 'true';
+      if (isLoggedIn) {
+        const stored = localStorage.getItem('adminProfile');
+        if (stored) {
+          try {
+            const profile = JSON.parse(stored);
+            setUserName(profile.name);
+            setUserAvatar(profile.avatar);
+            return;
+          } catch(e) {}
+        }
+        setUserName('Administrador');
+        setUserAvatar('./assets/RavivaSF.png');
+      } else {
+        setUserName('');
+        setUserAvatar(null);
+      }
+    };
+    
+    checkLogin();
+    // Allow checking changes if navigated back in same window OR storage event from other tabs
+    window.addEventListener('storage', checkLogin);
+    window.addEventListener('profileUpdate', checkLogin);
+    return () => {
+      window.removeEventListener('storage', checkLogin);
+      window.removeEventListener('profileUpdate', checkLogin);
+    };
+  }, []);
+
   return (
     <header>
       <div className="container header-flex" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div className="logo-container">
           <a href="#" className="logo-link">
-            <img src="/assets/RavivaSF.png" alt="Rádio AVIVA" className="logo" />
+            <img src="./assets/RavivaSF.png" alt="Rádio AVIVA" className="logo" />
           </a>
         </div>
         
@@ -25,20 +59,17 @@ export default function Header() {
           to="/admin" 
           className="admin-link-btn" 
           title="Painel Administrativo"
-          style={{ 
-            color: '#fff', 
-            fontSize: '1.5rem', 
-            border: '2px solid #FFD700', 
-            borderRadius: '50%', 
-            width: '40px', 
-            height: '40px', 
-            display: 'flex', 
-            alignItems: 'center', 
-            justifyContent: 'center',
-            textDecoration: 'none'
-          }}
         >
-          <i className="fas fa-user-circle"></i>
+          {userName && <span style={{ fontSize: '0.85rem', fontWeight: '600', color: '#f8f9fa' }}>{userName}</span>}
+          {userAvatar ? (
+            <img 
+              src={userAvatar} 
+              alt="Avatar do Usuário" 
+              className="user-avatar-preview"
+            />
+          ) : (
+            <i className="fas fa-user-circle" style={{ fontSize: '1.6rem' }}></i>
+          )}
         </Link>
       </div>
     </header>
