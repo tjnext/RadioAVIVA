@@ -35,23 +35,6 @@ export default function Programacao() {
               <img src="./assets/studio.png" alt="Estúdio Rádio AVIVA" className="studio-img-tri" />
             </div>
           </div>
-
-          {/* Coluna 3: App Download */}
-          <div className="tri-column tri-right">
-            <div className="download-app-card-tri">
-              <h3>Baixe o App Oficial</h3>
-              <a href="#" className="btn-download-green-tri" target="_blank" rel="noopener noreferrer">
-                <i className="fas fa-download"></i> BAIXAR
-              </a>
-              <div className="mockup-container-tri">
-                <img 
-                  src="./assets/smartphones.png" 
-                  alt="App Rádio AVIVA Mockup" 
-                  className="app-mockup-img-tri" 
-                />
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </section>
