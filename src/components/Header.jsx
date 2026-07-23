@@ -50,7 +50,6 @@ export default function Header() {
             <li><a href="#" className="active-link" style={{ color: '#FFD700', textDecoration: 'none', fontWeight: '500', paddingBottom: '5px', borderBottom: '2px solid #FFD700' }}>Início</a></li>
             <li><a href="#programacao" style={{ color: '#fff', textDecoration: 'none', fontWeight: '500' }}>Programação</a></li>
             <li><a href="#cultos" style={{ color: '#fff', textDecoration: 'none', fontWeight: '500' }}>Cultos</a></li>
-            <li><a href="#eventos" style={{ color: '#fff', textDecoration: 'none', fontWeight: '500' }}>Eventos</a></li>
             <li><a href="#contato" style={{ color: '#fff', textDecoration: 'none', fontWeight: '500' }}>Contato</a></li>
           </ul>
         </nav>
