@@ -46,7 +46,7 @@ export default function Player() {
         data-type="podcastsPlayer" 
         data-publictoken="a4a1705e-1dcf-4f58-9078-7245f8553e65" 
         data-theme="dark" 
-        data-color="FFCC00" 
+        data-color="FFF900" 
         data-channelid="a253fa09-7330-4875-86bd-f5bc2f6dc563" 
         data-rendered="false" 
         className="cstrEmbed"
