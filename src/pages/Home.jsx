@@ -15,7 +15,6 @@ export default function Home() {
       <Hero />
       <Programacao />
       <Cultos />
-      <Eventos />
       <PedidoOracao />
       <RedesSociais />
       <Footer />
