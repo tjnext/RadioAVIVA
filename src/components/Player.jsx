@@ -12,7 +12,7 @@ export default function Player() {
     
     const script = document.createElement('script');
     script.id = scriptId;
-    script.src = "https://cdn.cloud.caster.fm/widgets/embed.js?v=" + new Date().getTime();
+    script.src = "https://cdn.cloud.caster.fm//widgets/embed.js" + new Date().getTime();
     script.async = true;
     document.body.appendChild(script);
 
@@ -37,10 +37,10 @@ export default function Player() {
     }}>
       <div 
         data-type="podcastsPlayer" 
-        data-publicToken="adaaaee4-040c-48e3-a91b-717487ba1445" 
+        data-publicToken="a4a1705e-1dcf-4f58-9078-7245f8553e65" 
         data-theme="light" 
         data-color="FFCC00" 
-        data-channelId="a16eb248-03ab-4b5b-a239-dd2a9b1bd6c4" 
+        data-channelId="a253fa09-7330-4875-86bd-f5bc2f6dc563" 
         data-rendered="false" 
         className="cstrEmbed"
         style={{ width: '100%', maxWidth: '800px', margin: '0 auto' }}
