@@ -183,8 +183,9 @@ header {
 ===================== */
 .hero {
     position: relative;
+    /* ✅ Ajustado para buscar direto da raiz public */
     background: linear-gradient(135deg, rgba(0, 26, 56, 0.65), rgba(0, 61, 102, 0.65)),
-                url('public/assets/fundo.jpg');
+                url('/assets/fundo.jpg');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
